@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    
+</head>
+<body>
+   <!--<script src="./4_0_1_socket.io.min.js"></script>-->
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.min.js" integrity="sha512-eVL5Lb9al9FzgR63gDs1MxcDS2wFu3loYAgjIH0+Hg38tCS8Ag62dwKyH+wzDb+QauDpEZjXbMn11blw8cbTJQ==" crossorigin="anonymous"></script>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script >
+
+$(function(){
+
+        var socket = io.connect("http://192.168.1.4:3000/blockchain", {
+            transports: ['websocket'] 
+        })
+        //bring up the network 
+        socket.on('registerUser',function(data){
+            console.log("calling the register data function")
+                if(data.returnValue){
+                    console.log("inside if 1")
+                    //socket.emit('query',{message:'enrolling the admin'})
+                    //socket.emit('query',{userName:'user123', org:'org1'})
+                    socket.emit('invoke',{userName:'user123',org:'org1',Model_param:'300',Layers:'2',language:'Hindi',Accuracy:'65'})
+                    console.log("register user done")
+                } 
+               
+            console.log('registered the user '+JSON.stringify(data));
+        });
+        socket.emit('registerUser',{userName:'user123', org:"org1"})
+        
+        
+        socket.on('query',function(data){
+            console.log("response  ="+data)
+                if(data.returnValue){
+                    console.log("calling the query function")
+                    //socket.emit('invoke',{message:'enrolling the admin'})
+                    console.log("Emit the invoke function")
+                    console.log("query called")
+
+                } 
+            console.log('query done'+JSON.stringify(data));
+        });
+
+        socket.on('invoke',function(data){
+                if(data.returnValue){
+                    socket.emit('query',{userName:'user123', org:'org1'})
+
+                } 
+            console.log('invocation done  '+JSON.stringify(data));
+        });
+       // socket.emit('registerUser',{userName:'user123', org:"org1"})
+       // socket.emit('query',{userName:'user123', org:'org1'})
+       // socket.emit('invoke',{userName:'user123',org:'org1'})
+/*
+       
+            socket.emit('DeployCC',{message:'Chaincode Deployed'});
+       // bringing up the Network and deploy the chaincode 
+      socket.on('NetworkCC',function(data){
+            console.log('Deploying the chaincode ');
+        });
+            socket.emit('NetworkCC',{message:'Chaincode Deployed'});
+*/
+
+        socket.on('register', function(data) {
+            console.log('Got announcement on your registration:', data);
+        });
+        // socket.emit('register', { message: 'Hey, register me!' });
+    });
+    </script>
+    <h1>Running the application</h1>
+</body>
+</html>
